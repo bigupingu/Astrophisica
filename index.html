@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>🌟 Созвездие "Ключелик" + Мемоскоп 🌟</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="tabs">
+  <button class="tab-button active" data-tab="tracker-tab">🌠 Созвездие "Ключелик"</button>
+  <button class="tab-button" data-tab="horoscope-tab">🔮 Мемоскоп</button>
+</div>
+
+<!-- ==================== ВКЛАДКА ТРЕКЕРА ==================== -->
+<div id="tracker-tab" class="tab-content active">
+  <h1>🌠 Созвездие "Ключелик" 🌠</h1>
+  <div class="toolbar">
+    <label for="datePicker">📅 Дата:</label>
+    <input type="date" id="datePicker" />
+    <div class="dropdown" id="settingsDropdown">
+      <button class="secondary" id="btnSettings">⚙️ Настройки</button>
+      <div class="dropdown-content" id="settingsContent">
+        <button id="btnStudents">👥 Редактировать список</button>
+        <button id="btnDownload">💾 Скачать</button>
+        <button id="btnAverage">📊 Результаты</button>
+        <button id="btnDownloadAverage">📈 Скачать средние</button>
+        <button id="btnReset">🔄 Сброс</button>
+        <button id="btnCloseDay">🔒 Закрыть день</button>
+      </div>
+    </div>
+  </div>
+  <div class="chart-container" id="chartContainer">
+    <div class="y-axis" id="yAxis"></div>
+    <div class="plot-area" id="plotArea">
+      <svg id="constellation-lines" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
+  </div>
+
+  <!-- Модальные окна трекера -->
+  <div id="modalStudents" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>👥 Список участников</h2>
+      <p style="margin-bottom:10px; color:#aaa;">Введите имя и фамилию каждого человека с новой строки.</p>
+      <textarea id="studentListText" placeholder="Иван Иванов&#10;Мария Петрова&#10;..."></textarea>
+      <div class="actions" style="flex-direction: row; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+        <button class="btn-cancel" id="btnCancelStudents">Отмена</button>
+        <button class="btn-save" id="btnSaveStudents">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalDownload" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>💾 Выберите формат</h2>
+      <div class="actions">
+        <button id="btnDownloadPNG">🖼️ PNG</button>
+        <button id="btnDownloadJPG">🖼️ JPG</button>
+        <button id="btnDownloadPDF">📄 PDF</button>
+        <button class="btn-cancel" id="btnCancelDownload">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalDownloadAverage" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>📈 Скачать средние</h2>
+      <div class="actions">
+        <button id="btnDownloadAveragePNG">🖼️ PNG</button>
+        <button id="btnDownloadAverageJPG">🖼️ JPG</button>
+        <button id="btnDownloadAveragePDF">📄 PDF</button>
+        <button class="btn-cancel" id="btnCancelDownloadAverage">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalReset" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>🔄 Сброс данных</h2>
+      <div class="actions">
+        <button id="btnResetDay">🗑️ Сбросить текущий день</button>
+        <button id="btnResetAll">♻️ Сбросить весь трекер</button>
+        <button class="btn-cancel" id="btnCancelReset">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalAverage" class="modal-overlay hidden">
+    <div class="modal modal-large">
+      <h2>📊 Средние значения за смену</h2>
+      <div class="average-chart-container" id="averageChartContainer">
+        <div class="average-y-axis" id="averageYAxis"></div>
+        <div class="average-plot-area" id="averagePlotArea">
+          <svg id="averageConstellationLines" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+      </div>
+      <div class="actions" style="flex-direction: row; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+        <button class="btn-cancel" id="btnCloseAverage">Закрыть</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== ВКЛАДКА МЕМОСКОПА ==================== -->
+<div id="horoscope-tab" class="tab-content">
+  <h1>🔮 Мемоскоп 🔮</h1>
+  <div class="toolbar">
+    <label for="horoscopeDatePicker">📅 Дата:</label>
+    <input type="date" id="horoscopeDatePicker" />
+    <button class="secondary" id="btnHoroscopeSettings">⚙️ Настройки</button>
+  </div>
+  <div class="horoscope-fullscreen" id="horoscopeFullscreen"></div>
+
+  <!-- Модальные окна мемоскопа -->
+  <div id="modalHoroscopeEdit" class="modal-overlay hidden">
+    <div class="modal" style="max-width: 900px; width: 95%;">
+      <h2>✏️ Редактировать мемоскоп на <span id="editHoroscopeDateLabel"></span></h2>
+      <div class="horoscope-edit-list" id="horoscopeEditList"></div>
+      <div class="actions" style="flex-direction: row; justify-content: flex-end; gap: 12px; margin-top: 15px;">
+        <button class="btn-cancel" id="btnCancelHoroscopeEdit">Отмена</button>
+        <button class="btn-save" id="btnSaveHoroscopeEdit">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalHoroscopeExport" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>💾 Экспорт мемоскопа</h2>
+      <p>Выберите знаки (можно несколько):</p>
+      <div id="horoscopeExportCheckboxes" style="margin: 10px 0; max-height: 200px; overflow-y: auto;"></div>
+      <p>Формат:</p>
+      <div class="actions" style="flex-direction: row; flex-wrap: wrap;">
+        <button id="btnHoroscopeExportPNG">🖼️ PNG</button>
+        <button id="btnHoroscopeExportJPG">🖼️ JPG</button>
+        <button id="btnHoroscopeExportPDF">📄 PDF</button>
+        <button class="btn-cancel" id="btnCancelHoroscopeExport">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalHoroscopeReset" class="modal-overlay hidden">
+    <div class="modal">
+      <h2>🔄 Сброс мемоскопа</h2>
+      <div class="actions">
+        <button id="btnHoroscopeResetDay">🗑️ Сбросить текущий день</button>
+        <button id="btnHoroscopeResetAll">♻️ Сбросить всё</button>
+        <button class="btn-cancel" id="btnCancelHoroscopeReset">Отмена</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
